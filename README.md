@@ -1,7 +1,5 @@
 # Orbital-Servers-Gaming
-A menu for all Orbital Gaming Servers
-
-### A place with all Orbital Files for gaming servers
+The Office Orbital Gaming Server Hub
 
 ### Todo
 - [x] Init
