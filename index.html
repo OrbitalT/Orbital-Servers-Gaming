@@ -11,32 +11,70 @@
 <body>
 
     <table>
-        <tr>
-            <th>Name</th>
-            <th>Game</th>
-            <th>IP</th>
-        </tr>
-        <tr>
-            <td>Orbital SMP</td>
-            <td>Minecraft</td>
-            <td>1.2.1.101</td>
-        </tr>
-        <tr>
-            <td>NNukeZ SMP</td>
-            <td>Minecraft</td>
-            <td>1.2.1.102</td>
-        </tr>
-        <tr>
-            <td>Orbital Valheim</td>
-            <td>Valheim</td>
-            <td>1.2.1.103</td>
-        </tr>
-        <tr>
-            <td>Orbital Zomboid</td>
-            <td>Project Zomboid</td>
-            <td>1.2.1.104</td>
-        </tr>
+
     </table>
+
+    <script>
+        const https = require('https');
+
+        var options = {
+            host: 'n8n.nnukez.com',
+            path: '/webhook/bb4639ce-39f5-43bc-92f8-36bac19bdace',
+            method: 'GET'
+        };
+
+        callback = function (response) {
+            var str = '';
+
+            //another chunk of data has been received, so append it to `str`
+            response.on('data', function (chunk) {
+                str += chunk;
+            });
+
+            //the whole response has been received, so we just print it out here
+            response.on('end', function () {
+                try {
+                    let arrayData = JSON.parse(str);
+                    console.log(arrayData);
+
+                    //Make table head
+                    function generateTableHead(table, data) {
+                        let thead = table.createTHead();
+                        let row = thead.insertRow();
+                        for (let key of data) {
+                            let th = document.createElement("th");
+                            let text = document.createTextNode(key);
+                            th.appendChild(text);
+                            row.appendChild(th);
+                        }
+                    }
+
+                    //Make table
+                    function generateTable(table, data) {
+                        for (let element of data) {
+                            let row = table.insertRow();
+                            for (key in element) {
+                                let cell = row.insertCell();
+                                let text = document.createTextNode(element[key]);
+                                cell.appendChild(text);
+                            }
+                        }
+                    }
+
+                    //Make table data
+                    let table = document.querySelector("table");
+                    let data = Object.keys(arrayData[0]);
+                    generateTable(table, arrayData);
+                    generateTableHead(table, data);
+
+                } catch (error) {
+                    console.error(error.message);
+                };
+            });
+        }
+
+        https.request(options, callback).end();
+    </script>
 
 </body>
 
